@@ -46,9 +46,6 @@ jobs:
       - name: Test CUDA
         run: |
             export ROOT_DOCKER_FOLDER=/LightGBM
-            cat > docker.env <<EOF
-            BUILD_DIRECTORY=$ROOT_DOCKER_FOLDER
-            EOF
             cat > docker-script.sh <<EOF
             nvidia-smi
             apt-get update
@@ -56,14 +53,14 @@ jobs:
             curl -sL https://cmake.org/files/v3.19/cmake-3.19.2-Linux-x86_64.sh -o cmake.sh
             chmod +x cmake.sh
             ./cmake.sh --prefix=/usr/local --exclude-subdir
-            mkdir \$BUILD_DIRECTORY/build && cd \$BUILD_DIRECTORY/build
-            sed -i'.bak' 's/std::string device_type = "cpu";/std::string device_type = "cuda";/' \$BUILD_DIRECTORY/include/LightGBM/config.h
-            grep -q 'std::string device_type = "cuda"' \$BUILD_DIRECTORY/include/LightGBM/config.h || exit -1  # make sure that changes were really done
+            sed -i'.bak' 's/std::string device_type = "cpu";/std::string device_type = "cuda";/' ./include/LightGBM/config.h
+            grep -q 'std::string device_type = "cuda"' ./include/LightGBM/config.h || exit -1  # make sure that changes were really done
             echo "Check sum of cuda_tree_learner.cpp"
-            sum \$BUILD_DIRECTORY/src/treelearner/cuda_tree_learner.cpp
+            sum ./src/treelearner/cuda_tree_learner.cpp
+            mkdir build && cd build
             cmake -DUSE_CUDA=ON ..
             make lightgbm -j4 || exit -1
-            cd \$BUILD_DIRECTORY/examples/regression
+            cd ../examples/regression
             ../../lightgbm config=train.conf
             EOF
             sudo docker run --env-file docker.env -v "$GITHUB_WORKSPACE":"$ROOT_DOCKER_FOLDER" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash $ROOT_DOCKER_FOLDER/docker-script.sh
