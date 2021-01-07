@@ -40,7 +40,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v1
         with:
-          fetch-depth: 5
+          fetch-depth: 20
           submodules: true
           ref: 5d79ff20d1b7ae226531e2445b17d747b253a637
       - name: Test CUDA
