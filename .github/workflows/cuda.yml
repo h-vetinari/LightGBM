@@ -47,32 +47,15 @@ jobs:
         run: |
             export ROOT_DOCKER_FOLDER=/LightGBM
             cat > docker.env <<EOF
-            TASK=cuda
-            COMPILER=gcc
-            GITHUB_ACTIONS=true
-            OS_NAME=linux
             BUILD_DIRECTORY=$ROOT_DOCKER_FOLDER
-            CONDA_ENV=test-env
-            PYTHON_VERSION=3.6
             EOF
             cat > docker-script.sh <<EOF
-            export CONDA=\$HOME/miniconda
-            export PATH=\$CONDA/bin:\$PATH
             nvidia-smi
             apt-get update
             apt-get install --no-install-recommends -y curl wget
             curl -sL https://cmake.org/files/v3.19/cmake-3.19.2-Linux-x86_64.sh -o cmake.sh
             chmod +x cmake.sh
             ./cmake.sh --prefix=/usr/local --exclude-subdir
-            wget -q -O conda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-            chmod +x conda.sh
-            sh conda.sh -b -p \$CONDA
-            conda config --set always_yes yes --set changeps1 no
-            conda update -q -y conda
-            conda create -q -y -n \$CONDA_ENV python=\$PYTHON_VERSION
-            source activate \$CONDA_ENV
-            cd \$BUILD_DIRECTORY
-            conda install -q -y -n \$CONDA_ENV numpy scipy pandas
             mkdir \$BUILD_DIRECTORY/build && cd \$BUILD_DIRECTORY/build
             sed -i'.bak' 's/std::string device_type = "cpu";/std::string device_type = "cuda";/' \$BUILD_DIRECTORY/include/LightGBM/config.h
             grep -q 'std::string device_type = "cuda"' \$BUILD_DIRECTORY/include/LightGBM/config.h || exit -1  # make sure that changes were really done
@@ -80,9 +63,7 @@ jobs:
             sum \$BUILD_DIRECTORY/src/treelearner/cuda_tree_learner.cpp
             cmake -DUSE_CUDA=ON ..
             make _lightgbm -j4 || exit -1
-            cd \$BUILD_DIRECTORY/python-package && python setup.py install --precompile --user || exit -1
-            cd \$BUILD_DIRECTORY/examples/python-guide/
-            python --version
-            python simple_example.py
+            cd \$BUILD_DIRECTORY/examples/binary_classification
+            ../../lightgbm config=train.conf
             EOF
             sudo docker run --env-file docker.env -v "$GITHUB_WORKSPACE":"$ROOT_DOCKER_FOLDER" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash $ROOT_DOCKER_FOLDER/docker-script.sh
