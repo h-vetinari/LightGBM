@@ -1,8 +1,9 @@
 name: CUDA GitHub Actions
 
 on:
-  pull_request_review_comment:
-    types: [created]
+  push:
+    branches:
+    - test_cuda
 
 jobs:
   test:
