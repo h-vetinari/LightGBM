@@ -76,6 +76,8 @@ jobs:
             mkdir \$BUILD_DIRECTORY/build && cd \$BUILD_DIRECTORY/build
             sed -i'.bak' 's/std::string device_type = "cpu";/std::string device_type = "cuda";/' \$BUILD_DIRECTORY/include/LightGBM/config.h
             grep -q 'std::string device_type = "cuda"' \$BUILD_DIRECTORY/include/LightGBM/config.h || exit -1  # make sure that changes were really done
+            echo "Check sum of cuda_tree_learner.cpp"
+            sum \$BUILD_DIRECTORY/src/treelearner/cuda_tree_learner.cpp
             cmake -DUSE_CUDA=ON ..
             make _lightgbm -j4 || exit -1
             cd \$BUILD_DIRECTORY/python-package && python setup.py install --precompile --user || exit -1
