@@ -1,7 +1,6 @@
 # coding: utf-8
 import lightgbm as lgb
 import pandas as pd
-from sklearn.metrics import mean_squared_error
 
 print('Loading data...')
 # load or create your dataset
@@ -46,4 +45,4 @@ print('Starting predicting...')
 # predict
 y_pred = gbm.predict(X_test, num_iteration=gbm.best_iteration)
 # eval
-print('The rmse of prediction is:', mean_squared_error(y_test, y_pred) ** 0.5)
+print('The rmse of prediction is:', np.square(np.subtract(y_true, y_pred)).mean() ** 0.5)
