@@ -38,9 +38,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v1
         with:
-          fetch-depth: 30
+          fetch-depth: 5
           submodules: true
-          ref: 5eee55cc3e5a531e24530cbcd4f027a4b44ebcdd
       - name: Test CUDA
         run: |
             export ROOT_DOCKER_FOLDER=/LightGBM
@@ -61,4 +60,4 @@ jobs:
             cd ../examples/regression
             ../../lightgbm config=train.conf
             EOF
-            sudo docker run -v "./":"/LightGBM" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash /LightGBM/docker-script.sh
+            sudo docker run -v "$(pwd)":"/LightGBM" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash /LightGBM/docker-script.sh
