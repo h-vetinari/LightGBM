@@ -411,7 +411,7 @@ void CUDATreeLearner::copyDenseFeature() {
       auto sizes_in_byte = train_data_->FeatureGroupSizesInByte(i);
       void* tmp_data = train_data_->FeatureGroupData(i);
       Log::Debug("Started copying dense features from CPU to GPU - 2");
-      CUDASUCCESS_OR_FATAL(cudaMemcpyAsync(&device_features[copied_feature * num_data_], tmp_data, sizes_in_byte, cudaMemcpyHostToDevice, stream_[device_id]));
+      CUDASUCCESS_OR_FATAL(cudaMemcpy(&device_features[copied_feature * num_data_], tmp_data, sizes_in_byte, cudaMemcpyHostToDevice));
       Log::Debug("Started copying dense features from CPU to GPU - 3");
       copied_feature++;
       // reset device info
