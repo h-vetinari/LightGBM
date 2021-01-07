@@ -63,7 +63,7 @@ jobs:
             sum \$BUILD_DIRECTORY/src/treelearner/cuda_tree_learner.cpp
             cmake -DUSE_CUDA=ON ..
             make lightgbm -j4 || exit -1
-            cd \$BUILD_DIRECTORY/examples/binary_classification
+            cd \$BUILD_DIRECTORY/examples/regression
             ../../lightgbm config=train.conf
             EOF
             sudo docker run --env-file docker.env -v "$GITHUB_WORKSPACE":"$ROOT_DOCKER_FOLDER" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash $ROOT_DOCKER_FOLDER/docker-script.sh
