@@ -3,15 +3,13 @@ name: CUDA GitHub Actions
 on:
   push:
     branches:
-    - test_cuda_2
+    - test_cuda
 
 jobs:
   test:
     name: CUDA
     runs-on: [self-hosted, linux]
     timeout-minutes: 60
-    strategy:
-      fail-fast: false
     steps:
       - name: Setup or update software on host machine
         run: |
@@ -40,7 +38,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v1
         with:
-          fetch-depth: 20
+          fetch-depth: 30
           submodules: true
           ref: 5eee55cc3e5a531e24530cbcd4f027a4b44ebcdd
       - name: Test CUDA
@@ -63,4 +61,4 @@ jobs:
             cd ../examples/regression
             ../../lightgbm config=train.conf
             EOF
-            sudo docker run -v "$GITHUB_WORKSPACE":"$ROOT_DOCKER_FOLDER" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash $ROOT_DOCKER_FOLDER/docker-script.sh
+            sudo docker run -v "./":"/LightGBM" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash /LightGBM/docker-script.sh
