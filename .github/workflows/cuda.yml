@@ -3,7 +3,7 @@ name: CUDA GitHub Actions
 on:
   push:
     branches:
-    - test_cuda
+    - test_cuda_2
 
 jobs:
   test:
