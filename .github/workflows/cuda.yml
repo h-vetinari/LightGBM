@@ -42,7 +42,6 @@ jobs:
           submodules: true
       - name: Test CUDA
         run: |
-            export ROOT_DOCKER_FOLDER=/LightGBM
             cat > docker-script.sh <<EOF
             nvidia-smi
             apt-get update
@@ -52,7 +51,7 @@ jobs:
             ./cmake.sh --prefix=/usr/local --exclude-subdir
             sed -i'.bak' 's/std::string device_type = "cpu";/std::string device_type = "cuda";/' /LightGBM/include/LightGBM/config.h
             grep -q 'std::string device_type = "cuda"' /LightGBM/include/LightGBM/config.h || exit -1  # make sure that changes were really done
-            echo "Check sum of cuda_tree_learner.cpp"
+            echo "Check sum of cuda_tree_learner.cpp:"
             sum /LightGBM/src/treelearner/cuda_tree_learner.cpp
             mkdir /LightGBM/build && cd /LightGBM/build
             cmake -DUSE_CUDA=ON ..
