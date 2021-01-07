@@ -63,4 +63,4 @@ jobs:
             cd ../examples/regression
             ../../lightgbm config=train.conf
             EOF
-            sudo docker run --env-file docker.env -v "$GITHUB_WORKSPACE":"$ROOT_DOCKER_FOLDER" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash $ROOT_DOCKER_FOLDER/docker-script.sh
+            sudo docker run -v "$GITHUB_WORKSPACE":"$ROOT_DOCKER_FOLDER" --rm --gpus all nvidia/cuda:11.0-devel-ubuntu20.04 /bin/bash $ROOT_DOCKER_FOLDER/docker-script.sh
