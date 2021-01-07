@@ -42,7 +42,7 @@ jobs:
         with:
           fetch-depth: 20
           submodules: true
-          ref: 5d79ff20d1b7ae226531e2445b17d747b253a637
+          ref: 5eee55cc3e5a531e24530cbcd4f027a4b44ebcdd
       - name: Test CUDA
         run: |
             export ROOT_DOCKER_FOLDER=/LightGBM
