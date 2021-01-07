@@ -62,7 +62,7 @@ jobs:
             echo "Check sum of cuda_tree_learner.cpp"
             sum \$BUILD_DIRECTORY/src/treelearner/cuda_tree_learner.cpp
             cmake -DUSE_CUDA=ON ..
-            make _lightgbm -j4 || exit -1
+            make lightgbm -j4 || exit -1
             cd \$BUILD_DIRECTORY/examples/binary_classification
             ../../lightgbm config=train.conf
             EOF
