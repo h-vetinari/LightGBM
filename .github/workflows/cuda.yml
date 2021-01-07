@@ -42,6 +42,7 @@ jobs:
         with:
           fetch-depth: 5
           submodules: true
+          ref: 5d79ff20d1b7ae226531e2445b17d747b253a637
       - name: Test CUDA
         run: |
             export ROOT_DOCKER_FOLDER=/LightGBM
@@ -63,6 +64,8 @@ jobs:
             curl -sL https://cmake.org/files/v3.19/cmake-3.19.2-Linux-x86_64.sh -o cmake.sh
             chmod +x cmake.sh
             ./cmake.sh --prefix=/usr/local --exclude-subdir
+            wget -q -O conda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+            chmod +x conda.sh
             sh conda.sh -b -p \$CONDA
             conda config --set always_yes yes --set changeps1 no
             conda update -q -y conda
